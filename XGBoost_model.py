@@ -4,7 +4,7 @@ import numpy as np
 from tensorflow.keras.losses import MSE, MAE
 from sklearn.model_selection import train_test_split
 from xgboost import XGBRegressor
-
+from xgboost import XGBClassifier
 
 def calculate_delivery_date(quiz_label):
     quiz_data = pd.read_csv("./data/quiz.tsv", sep="\t")
@@ -30,9 +30,12 @@ X, x_quiz, y = load_dataset("final_train.csv", "final_test.csv", "label.csv")
 X = np.asarray(X).astype('float32')
 x_quiz = np.asarray(x_quiz).astype('float32')
 train_X, test_X, train_y, test_y = train_test_split(X, y, test_size=0.001)
+
 ##### Training Phase ####
+# regression
 model = XGBRegressor(n_estimators=1000, max_depth=8, verbosity=2, gpu_id=-1)  # , tree_method='gpu_hist'
 model.fit(train_X, train_y, eval_set=[(test_X, test_y)], eval_metric='mae', verbose=True)
+print(model.score(test_X,test_y))
 pred_test = model.predict(test_X)
 pred_train = model.predict(train_X)
 
@@ -49,3 +52,8 @@ result_df = pd.DataFrame(model.predict(x_quiz))
 result_df.to_csv("./data/quiz_result_XBG.csv", header=None)
 # result_df = pd.read_csv("./data/quiz_result_XGB.csv", header=None)
 calculate_delivery_date(result_df[1].values.round())
+
+# classifier
+xgb = XGBClassifier()
+xgb.fit(train_X,train_y)
+print(model.score(test_X,test_y))

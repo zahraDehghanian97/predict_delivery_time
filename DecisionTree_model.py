@@ -36,6 +36,7 @@ model = DecisionTreeRegressor(random_state=0)
 model.fit(train_X, train_y)
 pred_train = model.predict(train_X)
 pred_test = model.predict(test_X)
+print(model.score(test_X,test_y))
 
 test_mse = MSE(test_y, pred_test)
 test_mae = MAE(test_y, pred_test) / 2
@@ -47,6 +48,13 @@ print("TRAIN MSE : % f" % (train_mse))
 print("TRAIN MAE : % f" % (train_mae))
 
 result_df = pd.DataFrame(model.predict(x_quiz))
-result_df.to_csv("./data/quiz_result_XBG.csv", header=None)
-# result_df = pd.read_csv("./data/quiz_result_XGB.csv", header=None)
+result_df.to_csv("./data/quiz_result_DT.csv", header=None)
+# result_df = pd.read_csv("./data/quiz_result_DT.csv", header=None)
 calculate_delivery_date(result_df[1].values.round())
+
+
+# classification
+from sklearn.tree import DecisionTreeClassifier
+clf = DecisionTreeClassifier(random_state=0)
+clf.fit(train_X,train_y)
+print(clf.score(test_X,test_y))

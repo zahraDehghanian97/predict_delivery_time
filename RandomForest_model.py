@@ -27,26 +27,36 @@ def load_dataset(train_address, test_address, label_address):
 
 
 X, x_quiz, y = load_dataset("final_train.csv", "final_test.csv", "label.csv")
+print("load dataset")
 X = np.asarray(X).astype('float32')
 x_quiz = np.asarray(x_quiz).astype('float32')
 train_X, test_X, train_y, test_y = train_test_split(X, y, test_size=0.001)
-##### Training Phase ####
-model = RandomForestRegressor()
-model.fit(train_X, train_y)
-pred_test = model.predict(test_X)
-pred_train = model.predict(train_X)
+# ##### Training Phase ####
+# print(train_X.isnull().sum())
+# print("train random forest model begin")
+# model = RandomForestRegressor(verbose=2)
+# model.fit(train_X, train_y)
+# print(model.score(test_X,test_y))
+#
+# pred_test = model.predict(test_X)
+# pred_train = model.predict(train_X)
+#
+# test_mse = MSE(test_y, pred_test)
+# test_mae = MAE(test_y, pred_test) / 2
+# print("TEST MSE : % f" % (test_mse))
+# print("TEST MAE : % f" % (test_mae))
+# train_mse = MSE(train_y, pred_train)
+# train_mae = MAE(train_y, pred_train) / 2
+# print("TRAIN MSE : % f" % (train_mse))
+# print("TRAIN MAE : % f" % (train_mae))
+#
+# result_df = pd.DataFrame(model.predict(x_quiz))
+# result_df.to_csv("./data/quiz_result_RF.csv", header=None)
+# # result_df = pd.read_csv("./data/quiz_result_RF.csv", header=None)
+# calculate_delivery_date(result_df[1].values.round())
 
-test_mse = MSE(test_y, pred_test)
-test_mae = MAE(test_y, pred_test) / 2
-print("TEST MSE : % f" % (test_mse))
-print("TEST MAE : % f" % (test_mae))
-train_mse = MSE(train_y, pred_train)
-train_mae = MAE(train_y, pred_train) / 2
-print("TRAIN MSE : % f" % (train_mse))
-print("TRAIN MAE : % f" % (train_mae))
-
-result_df = pd.DataFrame(model.predict(x_quiz))
-result_df.to_csv("./data/quiz_result_XBG.csv", header=None)
-# result_df = pd.read_csv("./data/quiz_result_XGB.csv", header=None)
-calculate_delivery_date(result_df[1].values.round())
-
+# classification
+from sklearn.ensemble import RandomForestClassifier
+Rforest = RandomForestClassifier()
+Rforest.fit(train_X,train_y)
+print(Rforest.score(test_X,test_y))
