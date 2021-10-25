@@ -6,6 +6,7 @@ import haversine as hs
 def preprocess(train_df, test_df, save_to_file):
     print("load dataset")
     train_df = clean_dataset(train_df)
+    test_df["declared_handling_days"].fillna(train_df["declared_handling_days"].mean(), inplace=True)
     original_df, train_end_index = pd.concat([train_df, test_df]), train_df.shape[0]
     print("number of train data = " + str(train_end_index))
     feature_df = create_empty_df()
@@ -51,7 +52,7 @@ def load_dataset(train_address, test_address):
 
 
 def clean_dataset(df):
-    df["declared_handling_days"].fillna(df["declared_handling_days"].mean())
+    df["declared_handling_days"].fillna(df["declared_handling_days"].mean(),inplace=True)
     df = df[df["package_size"] != "NONE"]
     df = df[df["shipping_fee"] >= 0]
     df = df[df["carrier_min_estimate"] >= 0]
@@ -127,6 +128,7 @@ def add_datetime_feature(original_df, feature_df, feature_name):
 
 def add_zipcode(data_name):
     df = pd.read_csv("./data/" + data_name + ".tsv", sep="\t")
+    df = df.iloc[:1000000]
     df['distance'] = ""
     df['long1'] = ""
     df['long2'] = ""
@@ -153,6 +155,7 @@ def add_zipcode(data_name):
             lat1 = buyer_zip_coor[1]
             long2 = item_zip_coor[0]
             lat2 = item_zip_coor[1]
+
         else:
             distance = -100
         df.at[index, 'distance'] = distance
@@ -160,10 +163,12 @@ def add_zipcode(data_name):
         df.at[index, 'lat1'] = lat1
         df.at[index, 'long2'] = long2
         df.at[index, 'lat2'] = lat2
-    mean = df['distance'].mean()
-    for index, row in df.iterrows():
-        if df.at[index, 'distance'] == -100:
-            df.at[index, 'distance'] = mean
+    df.at[index, 'distance'] = distance
+    df.at[index, 'long1'] = long1
+    df.at[index, 'lat1'] = lat1
+    df.at[index, 'long2'] = long2
+    df.at[index, 'lat2'] = lat2
+
     return df
 
 
@@ -172,7 +177,10 @@ lat_long = tuple(zip(zip_df[9].tolist(), zip_df[10].tolist()))
 zip_code = zip_df[1].tolist()
 z = {zip_code[i]: lat_long[i] for i in range(len(zip_df.index))}
 
-train_df = add_zipcode("train")
-test_df = add_zipcode("quiz")
+train_df = add_zipcode("simple_train")
+test_df = add_zipcode("simple_quiz")
+# print(np.unique(train_df["declared_handling_days"]))
 
 X, x_quiz, y = preprocess(train_df, test_df, True)
+print(np.unique(x_quiz["declared_handling_days"]))
+
