@@ -48,14 +48,8 @@ train_mse = MSE(train_y, pred_train)
 train_mae = MAE(train_y, pred_train) / 2
 print("TRAIN MSE : % f" % (train_mse))
 print("TRAIN MAE : % f" % (train_mae))
-#
-# result_df = pd.DataFrame(model.predict(x_quiz))
-# result_df.to_csv("./data/quiz_result_RF.csv", header=None)
-# # result_df = pd.read_csv("./data/quiz_result_RF.csv", header=None)
-# calculate_delivery_date(result_df[1].values.round())
 
-# # classification
-# from sklearn.ensemble import RandomForestClassifier
-# Rforest = RandomForestClassifier()
-# Rforest.fit(train_X,train_y)
-# print(Rforest.score(test_X,test_y))
+result_df = pd.DataFrame(model.predict(x_quiz))
+result_df.to_csv("./data/quiz_result_RF.csv", header=None)
+# result_df = pd.read_csv("./data/quiz_result_RF.csv", header=None)
+calculate_delivery_date(result_df[1].values.round())

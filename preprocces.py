@@ -177,8 +177,8 @@ lat_long = tuple(zip(zip_df[9].tolist(), zip_df[10].tolist()))
 zip_code = zip_df[1].tolist()
 z = {zip_code[i]: lat_long[i] for i in range(len(zip_df.index))}
 
-train_df = add_zipcode("simple_train")
-test_df = add_zipcode("simple_quiz")
+train_df = add_zipcode("train")
+test_df = add_zipcode("quiz")
 # print(np.unique(train_df["declared_handling_days"]))
 
 X, x_quiz, y = preprocess(train_df, test_df, True)

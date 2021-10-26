@@ -7,14 +7,12 @@ from sklearn.tree import DecisionTreeRegressor
 
 
 def calculate_delivery_date(quiz_label):
-    print("hello")
     quiz_data = pd.read_csv("./data/quiz.tsv", sep="\t")
     quiz_data = pd.to_datetime(quiz_data["acceptance_scan_timestamp"].str.slice(0, 10))
-    out_file = open('./data/final_predict_DT.csv', 'w+', newline='')
+    out_file = open('./data/final_predict_RF.csv', 'w+', newline='')
     tsv_writer = csv.writer(out_file, delimiter='\t')
-    print("hello")
     for index, value in quiz_data.items():
-        tsv_writer.writerow([str(15000001 + index), str(value + pd.Timedelta(days=quiz_label[index][0]))[:10]])
+        tsv_writer.writerow([str(15000001 + index), str(value + pd.Timedelta(days=quiz_label[index]))[:10]])
         if index % 100000 == 0:
             print(index)
     out_file.flush()
@@ -50,15 +48,8 @@ train_mae = MAE(train_y, pred_train) / 2
 print("TRAIN MSE : % f" % (train_mse))
 print("TRAIN MAE : % f" % (train_mae))
 
-result_df = pd.DataFrame(model.predict(x_quiz))
-result_df.to_csv("./data/quiz_result_DT.csv", header=None)
-result_df = np.array(result_df)
-# result_df = pd.read_csv("./data/quiz_result_DT.csv", header=None)
-calculate_delivery_date(result_df)
 
-#
-# # classification
-# from sklearn.tree import DecisionTreeClassifier
-# clf = DecisionTreeClassifier(random_state=0)
-# clf.fit(train_X,train_y)
-# print(clf.score(test_X,test_y))
+result_df = pd.DataFrame(model.predict(x_quiz))
+result_df.to_csv("./data/quiz_result_RF.csv", header=None)
+# result_df = pd.read_csv("./data/quiz_result_RF.csv", header=None)
+calculate_delivery_date(result_df[1].values.round())
