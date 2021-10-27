@@ -128,7 +128,7 @@ def add_datetime_feature(original_df, feature_df, feature_name):
 
 def add_zipcode(data_name):
     df = pd.read_csv("./data/" + data_name + ".tsv", sep="\t")
-    df = df.iloc[:1000000]
+    # df = df.iloc[:1000000]
     df['distance'] = ""
     df['long1'] = ""
     df['long2'] = ""
