@@ -34,7 +34,7 @@ train_X, test_X, train_y, test_y = train_test_split(X, y, test_size=0.001)
 
 ##### Training Phase ####
 # regression
-model = XGBRegressor(n_estimators=1000, max_depth=8, verbosity=2, gpu_id=-1)  # , tree_method='gpu_hist'
+model = XGBRegressor(n_estimators=1000, max_depth=8, verbosity=2, tree_method='gpu_hist')  # , gpu_id=-1)
 model.fit(train_X, train_y, eval_set=[(test_X, test_y)], eval_metric='mae', verbose=True)
 print(model.score(test_X,test_y))
 pred_test = model.predict(test_X)
